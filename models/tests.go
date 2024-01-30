@@ -2,9 +2,8 @@ package models
 
 import "time"
 
-type Tests struct {
-	ID        uint `json:"id" gorm:"primaryKey"`
+type Test struct {
+	ID        uint   `json:"id" gorm:"primaryKey"`
+	Title     string `json:"title_test"`
 	CreatedAt time.Time
-	Title     string     `json:"title_test"`
-	Questions []Question `gorm:"foreignKey:TestID"`
 }

@@ -107,5 +107,5 @@ func DeleteYear(c *fiber.Ctx) error {
 	if err := database.Database.Db.Delete(&year).Error; err != nil {
 		return c.Status(404).JSON(err.Error())
 	}
-	return c.Status(200).SendString("Successfully Deleted User")
+	return c.Status(200).SendString("Successfully Deleted Year")
 }

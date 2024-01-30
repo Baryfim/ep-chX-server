@@ -19,15 +19,29 @@ func setupRoutes(app *fiber.App) {
 	// welcome
 	app.Get("/api", welcome)
 	// Year endpoints
-	app.Post("/api/years", middlewares.CheackAdminIsValid, routes.CreateYear)
-	app.Get("/api/years", middlewares.CheackAdminIsValid, routes.GetYears)
 	app.Get("/api/years/:id", routes.GetYear)
+	app.Get("/api/years", routes.GetYears)
+	app.Post("/api/years", middlewares.CheackAdminIsValid, routes.CreateYear)
 	app.Put("/api/years/:id", middlewares.CheackAdminIsValid, routes.UpdateYear)
 	app.Delete("/api/years/:id", middlewares.CheackAdminIsValid, routes.DeleteYear)
 	// Item endpoints
 	app.Post("/api/items", middlewares.CheackAdminIsValid, routes.CreateItem)
 	app.Get("/api/items", routes.GetItems)
 	app.Get("/api/items/:id", routes.GetItem)
+	app.Put("/api/items/:id", middlewares.CheackAdminIsValid, routes.UpdateItem)
+	app.Delete("/api/items/:id", middlewares.CheackAdminIsValid, routes.DeleteItem)
+	// Test endpoints
+	app.Get("/api/tests/:id", routes.GetTest)
+	app.Get("/api/tests", routes.GetTests)
+	app.Post("/api/tests", middlewares.CheackAdminIsValid, routes.CreateTest)
+	app.Put("/api/tests/:id", middlewares.CheackAdminIsValid, routes.UpdateTest)
+	app.Delete("/api/tests/:id", middlewares.CheackAdminIsValid, routes.DeleteTest)
+	// Questions endpoints
+	app.Get("/api/questions/:id", routes.GetQuestion)
+	app.Get("/api/questions", routes.GetQuestions)
+	app.Post("/api/questions", middlewares.CheackAdminIsValid, routes.CreateQuestion)
+	app.Put("/api/questions/:id", middlewares.CheackAdminIsValid, routes.UpdateQuestion)
+	app.Delete("/api/questions/:id", middlewares.CheackAdminIsValid, routes.DeleteQuestion)
 }
 
 func main() {
