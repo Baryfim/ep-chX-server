@@ -2,9 +2,12 @@ package main
 
 import (
 	"log"
+	"os"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/joho/godotenv"
 	"github.com/sixfwa/fiber-api/database"
+	"github.com/sixfwa/fiber-api/middlewares"
 	"github.com/sixfwa/fiber-api/routes"
 )
 
@@ -16,13 +19,13 @@ func setupRoutes(app *fiber.App) {
 	// welcome
 	app.Get("/api", welcome)
 	// Year endpoints
-	app.Post("/api/years", routes.CreateYear)
-	app.Get("/api/years", routes.GetYears)
+	app.Post("/api/years", middlewares.CheackAdminIsValid, routes.CreateYear)
+	app.Get("/api/years", middlewares.CheackAdminIsValid, routes.GetYears)
 	app.Get("/api/years/:id", routes.GetYear)
-	app.Put("/api/years/:id", routes.UpdateYear)
-	app.Delete("/api/years/:id", routes.DeleteYear)
+	app.Put("/api/years/:id", middlewares.CheackAdminIsValid, routes.UpdateYear)
+	app.Delete("/api/years/:id", middlewares.CheackAdminIsValid, routes.DeleteYear)
 	// Item endpoints
-	app.Post("/api/items", routes.CreateItem)
+	app.Post("/api/items", middlewares.CheackAdminIsValid, routes.CreateItem)
 	app.Get("/api/items", routes.GetItems)
 	app.Get("/api/items/:id", routes.GetItem)
 }
@@ -32,5 +35,11 @@ func main() {
 	app := fiber.New()
 
 	setupRoutes(app)
-	log.Fatal(app.Listen(":3005"))
+
+	if err := godotenv.Load(".env"); err != nil {
+		log.Fatal("Error dotenv file \n" + err.Error())
+		return
+	}
+
+	log.Fatal(app.Listen(os.Getenv("PORT")))
 }

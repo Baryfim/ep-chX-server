@@ -1,6 +1,11 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+	"gorm.io/gorm"
+)
 
 type Item struct {
 	ID         uint `json:"id" gorm:"primaryKey"`
@@ -11,6 +16,13 @@ type Item struct {
 	Name       string `json:"name"`
 	Text       string `json:"text" gorm:"text"`
 	SourceLink string `json:"source_link"`
-	ImageReal  string `json:"imageReal"` // changed from [3]string
-	ImageAi    string `json:"imageAi"`   // changed from [3]string
+	ImageReal  string `json:"imageReal"`
+	ImageAi    string `json:"imageAi"`
+	Slug       string `json:"slug"`
+}
+
+func (item *Item) BeforeCreate(tx *gorm.DB) (err error) {
+	uuid := uuid.New()
+	item.Slug = uuid.String()
+	return
 }

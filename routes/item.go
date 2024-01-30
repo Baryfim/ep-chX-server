@@ -2,6 +2,7 @@ package routes
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -10,26 +11,28 @@ import (
 )
 
 type ItemSerializer struct {
-	ID        uint `json:"id" gorm:"primaryKey"`
-	CreatedAt time.Time
-	Year      YearSerializer `gorm:"foreignKey:YaerRefer"`
-	Date      string         `json:"date"`
-	Name      string         `json:"name"`
-	Text      string         `json:"text" gorm:"text"`
-	ImageReal string         `json:"imageReal"` // changed from [3]string
-	ImageAi   string         `json:"imageAi"`   // changed from [3]string
+	ID         uint `json:"id" gorm:"primaryKey"`
+	CreatedAt  time.Time
+	Year       YearSerializer `gorm:"foreignKey:YaerRefer"`
+	Date       string         `json:"date"`
+	Name       string         `json:"name"`
+	Text       string         `json:"text" gorm:"text"`
+	SourceLink string         `json:"source_link"`
+	ImageReal  string         `json:"imageReal"` // changed from [3]string
+	ImageAi    string         `json:"imageAi"`   // changed from [3]string
 }
 
 func CreateResponseItem(item models.Item, year YearSerializer) ItemSerializer {
 	return ItemSerializer{
-		ID:        item.ID,
-		CreatedAt: item.CreatedAt,
-		Year:      year,
-		Date:      item.Date,
-		Name:      item.Name,
-		Text:      item.Text,
-		ImageReal: item.ImageReal,
-		ImageAi:   item.ImageAi,
+		ID:         item.ID,
+		CreatedAt:  item.CreatedAt,
+		Year:       year,
+		Date:       item.Date,
+		Name:       item.Name,
+		Text:       item.Text,
+		SourceLink: item.SourceLink,
+		ImageReal:  item.ImageReal,
+		ImageAi:    item.ImageAi,
 	}
 }
 
@@ -37,6 +40,7 @@ func CreateItem(c *fiber.Ctx) error {
 	var item models.Item
 
 	if err := c.BodyParser(&item); err != nil {
+		fmt.Println("H")
 		return c.Status(400).JSON(err.Error())
 	}
 
