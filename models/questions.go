@@ -1,6 +1,11 @@
 package models
 
-import "gorm.io/datatypes"
+import (
+	"encoding/json"
+
+	"gorm.io/datatypes"
+	"gorm.io/gorm"
+)
 
 type Question struct {
 	ID            uint           `json:"id" gorm:"primaryKey"`
@@ -11,4 +16,15 @@ type Question struct {
 	QuestionTitle string         `json:"title_question"`
 	ItemRefer     int            `json:"item_id"`
 	Item          Item           `gorm:"foreignKey:ItemRefer"`
+}
+
+func (q *Question) BeforeSave(tx *gorm.DB) (err error) {
+	var (
+		AnswersArr []string
+	)
+	err = json.Unmarshal(q.Answers, &AnswersArr)
+	if err != nil {
+		return err
+	}
+	return nil
 }

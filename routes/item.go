@@ -50,7 +50,10 @@ func CreateItem(c *fiber.Ctx) error {
 		return c.Status(400).JSON(err.Error())
 	}
 
-	database.Database.Db.Create(&item)
+	err := database.Database.Db.Create(&item)
+	if err != nil {
+		return c.Status(500).SendString("Не корректный формат вводимых данных")
+	}
 
 	responseYear := CreateResponseYear(year)
 	responseItem := CreateResponseItem(item, responseYear)

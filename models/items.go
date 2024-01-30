@@ -4,8 +4,13 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+
 	"gorm.io/datatypes"
 	"gorm.io/gorm"
+
+	"encoding/json"
+	"fmt"
+	"strings"
 )
 
 type Item struct {
@@ -26,4 +31,29 @@ func (item *Item) BeforeCreate(tx *gorm.DB) (err error) {
 	uuid := uuid.New()
 	item.Slug = uuid.String()
 	return
+}
+
+func (item *Item) BeforeSave(tx *gorm.DB) (err error) {
+	var (
+		arrReal []string
+		arrAi   []string
+	)
+
+	err = json.Unmarshal(item.ImageReal, &arrReal)
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(item.ImageAi, &arrAi)
+	if err != nil {
+		return err
+	}
+
+	for _, item := range append(arrReal, arrAi...) {
+		if !strings.HasPrefix(item, "http://") && !strings.HasPrefix(item, "https://") {
+			return fmt.Errorf("элемент '%s' не начинается с http:// или https://", item)
+		}
+	}
+
+	return nil
 }
